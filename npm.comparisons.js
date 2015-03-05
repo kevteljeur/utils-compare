@@ -865,7 +865,15 @@ var comparisons = (
 						// Return the results of a string comparison of the expression.
 						result = ( objectA.toString() === objectB.toString() );
 		
-						callbackTest( result, "regex.mismatch", objectA, objectB );
+						callbackTest( result, ( result ? "equal" : "regex.mismatch" ), objectA, objectB );
+		
+						return result;
+					}
+					else if ( objectA instanceof Date ) {
+						// Return the results of a string comparison of the expression.
+						result = ( objectA.toString() === objectB.toString() );
+		
+						callbackTest( result, ( result ? "equal" : "date.mismatch" ), objectA, objectB );
 		
 						return result;
 					}
@@ -915,9 +923,14 @@ var comparisons = (
 						// Compare each property. They must be identical. If not, the comparison stops immediately and returns false.
 						keysA.forEach(
 							function ( element ) {
-								var keysResult = true;
+								var keysResult = true,
+									mapChild = null;
+								
+								if ( map && map[ element ] && ( ["$sort", "$unid", "$compare", "$type"].indexOf( element ) === -1 ) ) {
+									mapChild = map[ element ];
+								}
 		
-								keysResult = methods.differences( objectA[ element ], objectB[ element ], {map: ( map ) ? map[ element ] : null, path: pathParent + element, callback: callback, mode: opts.mode} );
+								keysResult = methods.differences( objectA[ element ], objectB[ element ], {map: mapChild, path: pathParent + element, callback: callback, mode: opts.mode} );
 		
 								if ( !keysResult ) {
 									result = false;
