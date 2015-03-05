@@ -208,6 +208,11 @@ var comparisons = (
 				skipTrue = arguments[ arguments.length - 1 ];
 			}
 			
+			if ( arguments.length > 2 && methods.typeOf( arguments[ arguments.length - 2 ] ) === "boolean" ) {
+				skipTrue = arguments[ arguments.length - 2 ];
+				map = arguments[ arguments.length - 1 ];
+			}
+			
 			if ( methods.typeOf( object ) === "array" ) {
 				map.$type = "array";
 				map.$unid = false;
